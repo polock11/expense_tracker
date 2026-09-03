@@ -1,0 +1,478 @@
+:root {
+  --paper: #fbf8f2;
+  --paper-inset: #f3efe4;
+  --ink: #1b1f23;
+  --ink-soft: #5b5648;
+  --rule: #d8d2c4;
+  --rule-strong: #b8b09b;
+  --brick: #a8432e;
+  --forest: #2f5d50;
+  --focus: #2f5d50;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.app {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ---------- Header ---------- */
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.app-eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.1rem;
+  letter-spacing: -0.01em;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.month-nav button {
+  background: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.month-nav button:hover {
+  background: var(--paper-inset);
+}
+
+.app-error {
+  background: #fbeae6;
+  border: 1px solid var(--brick);
+  color: var(--brick);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* ---------- Layout ---------- */
+
+.app-main {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .app-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.app-calendar-col,
+.app-day-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.loading-placeholder {
+  padding: 3rem 0;
+  text-align: center;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* ---------- Calendar ---------- */
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.4rem;
+}
+
+.calendar-weekdays span {
+  text-align: center;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-cell {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0.4rem 0.45rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: border-color 0.12s ease, background 0.12s ease;
+  font-family: var(--font-body);
+}
+
+.calendar-cell:hover {
+  border-color: var(--rule-strong);
+  background: var(--paper-inset);
+}
+
+.calendar-cell--empty {
+  visibility: hidden;
+  border: none;
+  cursor: default;
+}
+
+.calendar-cell--selected {
+  border-color: var(--forest);
+  box-shadow: inset 0 0 0 1px var(--forest);
+}
+
+.calendar-cell--today .calendar-cell-date {
+  color: var(--forest);
+  font-weight: 700;
+}
+
+.calendar-cell-date {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.calendar-cell-total {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  color: var(--brick);
+  align-self: flex-end;
+}
+
+.calendar-cell-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.calendar-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ---------- Month summary ---------- */
+
+.month-summary {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 1.25rem;
+}
+
+.month-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.9rem;
+}
+
+.month-summary-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.month-summary-total {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--brick);
+}
+
+.month-summary-empty {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.month-breakdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.month-breakdown li {
+  display: grid;
+  grid-template-columns: 10px 6.5rem 1fr 4.2rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.month-breakdown-label {
+  color: var(--ink-soft);
+}
+
+.month-breakdown-bar-track {
+  height: 6px;
+  background: var(--paper-inset);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.month-breakdown-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.month-breakdown-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Day panel ---------- */
+
+.day-panel {
+  background: var(--paper-inset);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.day-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.day-panel-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.day-panel-total {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--brick);
+}
+
+.expense-list {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.expense-list-empty {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+.expense-row {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.87rem;
+}
+
+.expense-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.expense-row-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.expense-row-category {
+  font-weight: 500;
+}
+
+.expense-row-desc {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-row-amount {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-display);
+}
+
+.expense-row-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.expense-row-actions button {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.expense-row-actions button.danger {
+  color: var(--brick);
+}
+
+/* ---------- Form ---------- */
+
+.expense-form {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.expense-form h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.expense-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.expense-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.expense-form input,
+.expense-form select {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.form-error {
+  color: var(--brick);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.expense-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.expense-form-actions button {
+  border: none;
+  border-radius: 4px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: var(--forest);
+  color: var(--paper);
+}
+
+.expense-form-actions button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.expense-form-actions button.secondary {
+  background: none;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-strong);
+}
