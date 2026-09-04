@@ -1,0 +1,10 @@
+{
+  "migrationsTable": "pgmigrations",
+  "migrationsSchema": "public",
+  "dir": "migrations",
+  "autoRun": false,
+  "noLock": false,
+  "timestamp": true,
+  "checkOrder": true,
+  "createMigrationsSchema": true
+}
