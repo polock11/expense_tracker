@@ -109,6 +109,15 @@ select:focus-visible {
   font-size: 0.9rem;
 }
 
+.app-footer {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  margin-top: 2.5rem;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+}
+
 /* ---------- Layout ---------- */
 
 .app-main {
