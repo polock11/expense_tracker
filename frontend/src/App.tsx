@@ -119,6 +119,10 @@ export default function App() {
           />
         </section>
       </main>
+
+      <footer className="app-footer">
+        <span aria-hidden="true">©</span> 2026, v1.0
+      </footer>
     </div>
   );
 }
