@@ -1,0 +1,49 @@
+name: Deploy to EC2
+
+# Runs whenever main is updated — either a direct push or a merged PR
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_SERVER_V02_HOST }}
+          username: ${{ secrets.EC2_SERVER_USR }}
+          key: ${{ secrets.EC2_SERVER_V02_KEY_PEM }}
+          script: |
+            set -e  # stop immediately if any command fails
+
+            cd ~/expense_tracker
+
+            echo "==> Pulling latest code"
+            git pull origin main
+
+            echo "==> Backend: install, migrate, build"
+            cd ~/expense_tracker/backend
+            npm install
+            npm run migrate:up
+            npm run build
+
+            echo "==> Restarting backend service"
+            sudo systemctl restart expense_tracker
+            sudo systemctl is-active --quiet expense_tracker && echo "Backend is running"
+
+            echo "==> Frontend: install, build"
+            cd ~/expense_tracker/frontend
+            npm install
+            npm run build
+
+            echo "==> Reloading nginx"
+            sudo nginx -t
+            sudo systemctl reload nginx
+
+            echo "==> Health check"
+            curl -sf http://localhost/api/health
+
+            echo "==> Deploy complete"
